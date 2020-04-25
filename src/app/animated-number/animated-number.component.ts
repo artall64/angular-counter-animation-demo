@@ -14,13 +14,18 @@ export class AnimatedNumberComponent implements OnInit, OnChanges {
   value: number = 1111;
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.doRendering();
+    const {currentValue, previousValue} = changes.value;
+
+    this.doRendering(
+      currentValue.toString().padStart(6, '0'),
+      (previousValue || '').toString().padStart(6, '0')
+    );
   }
 
   ngOnInit(): void {
   }
 
-  private doRendering() {
+  private doRendering(currentValue: string, previousValue: string) {
 
     //
     const h3counter = document.querySelector('#counter');
@@ -30,16 +35,16 @@ export class AnimatedNumberComponent implements OnInit, OnChanges {
 
     const h3 = document.createElement('h3');
 
-    const valueToRender = this.value.toString().padStart(6, '0');
-    h3.setAttribute('aria-label', valueToRender);
+    //const valueToRender = this.value.toString().padStart(6, '0');
+    h3.setAttribute('aria-label', currentValue);
     h3.id = 'counter';
     h3.className = 'counter';
-    h3.textContent = valueToRender;
+    h3.textContent = currentValue;
     h3.style.maxHeight = '60px';
     h3counterParent.appendChild(h3);
 
     const stats = document.querySelectorAll(".counter");
-    const x = this.value;
+
 
     stats.forEach(stat => {
       // pattern used to seperate input number from html into an array of numbers and non numbers. EX $65.3M -> ["$65.3M", "$", "65", ".", "3", "M"]
@@ -61,10 +66,17 @@ export class AnimatedNumberComponent implements OnInit, OnChanges {
 
       for (const res of result) {
         // if (isNaN(res as any)) {
-        //   stat.insertAdjacentHTML("beforeend", `<span>${res}</span>`);
-        // } else {
-          // debugger
-          for (let i = 0; i < res.length; i++) {
+        //   stat.insertAdjacentHTML("beforeend", `<spn>${res}</span>`);
+        // } else {a
+        // debugger
+        for (let i = 0; i < res.length; i++) {
+          if(res[i] === previousValue[i]){
+            stat.insertAdjacentHTML(
+              "beforeend",
+              `<span>${res[i]}</span>`
+            );
+          }
+          else {
             stat.insertAdjacentHTML(
               "beforeend",
               `<span data-value="${res[i]}">
@@ -81,6 +93,7 @@ export class AnimatedNumberComponent implements OnInit, OnChanges {
 					</span>`
             );
           }
+        }
         //}
       }
 
@@ -95,11 +108,11 @@ export class AnimatedNumberComponent implements OnInit, OnChanges {
 
         // if (top < offset) {
         //   setTimeout(() => {
-            for (let tick of ticks) {
-              let dist = parseInt(tick.getAttribute("data-value")) + 1;
-              tick.style.transform = `translateY(-${dist * 100}%)`;
-            }
-          // }, 1000);
+        for (let tick of ticks) {
+          let dist = parseInt(tick.getAttribute("data-value")) + 1;
+          tick.style.transform = `translateY(-${dist * 100}%)`;
+        }
+        // }, 1000);
         // }
       };
 

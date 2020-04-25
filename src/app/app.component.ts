@@ -8,7 +8,8 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  superValue = 100500;
+
+  superValue = 0;
 
   ngOnInit(): void {
     // setInterval(() => {
@@ -17,10 +18,13 @@ export class AppComponent implements OnInit {
   }
 
   onclick(e: any) {
-    const x = e.clientX;
-    const y = e.clientY;
-    const s = (Math.random() * 1000000).toFixed(0).padStart(6, '0');
-    this.superValue = +s;
+    // const x = e.clientX;
+    // const y = e.clientY;
+    // const s = (Math.random() * 1000000).toFixed(0).padStart(6, '0');
+    // this.superValue = +s;
+
+    this.superValue += 7
+
     //console.log(s);
     //this.superValue
   }
